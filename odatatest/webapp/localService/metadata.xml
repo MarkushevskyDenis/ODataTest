@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZDM_TEST_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="MainEntity" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Fyear"/>
+                    <PropertyRef Name="Fperiod"/>
+                    <PropertyRef Name="Currencykey"/>
+                    <PropertyRef Name="Ratetype"/>
+                </Key>
+                <Property Name="Etag" Type="Edm.String" Nullable="false" MaxLength="40" ConcurrencyMode="Fixed" sap:unicode="false" sap:label="Hash Value" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Fyear" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="FYEAR" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Fperiod" Type="Edm.Byte" Nullable="false" sap:unicode="false" sap:label="FPERIOD" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Currencykey" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="data element for currency" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/>
+                <Property Name="Ratetype" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="data element for id" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Rate" Type="Edm.Decimal" Nullable="false" Precision="6" Scale="4" sap:unicode="false" sap:label="RATE" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Qty" Type="Edm.Decimal" Nullable="false" Precision="6" Scale="0" sap:unicode="false" sap:label="QTY" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Ername" Type="Edm.String" Nullable="false" MaxLength="50" sap:unicode="false" sap:label="ERNAME" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityContainer Name="ZDM_TEST_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="MainEntitySet" EntityType="ZDM_TEST_SRV.MainEntity" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+            </EntityContainer>
+            <atom:link rel="self" href="http://vhcala4hci:50000/sap/opu/odata/SAP/ZDM_TEST_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="http://vhcala4hci:50000/sap/opu/odata/SAP/ZDM_TEST_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
