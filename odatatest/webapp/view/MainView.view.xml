@@ -8,7 +8,20 @@
 		<App id="app">
 			<pages>
 				<Page id="page" title="{i18n>title}">
-					<content />
+					<content>
+						<Input liveChange=".onEtag" description = "Etag" value = "{inputParameters>/data/Etag}" />
+						<Input liveChange=".onFyear" description = "Fyear" value = "{inputParameters>/data/Fyear}" />
+						<Input liveChange=".onFperiod" description = "Fperiod" value = "{inputParameters>/data/Fperiod}" />
+						<Input liveChange=".onCurrencykey" description = "Currencykey" value = "{inputParameters>/data/Currencykey}" />
+						<Input liveChange=".onRatetype" description = "Ratetype" value = "{inputParameters>/data/Ratetype}" />
+						<Input liveChange=".onRate" description = "Rate" value = "{inputParameters>/data/Rate}" />
+						<Input liveChange=".onQty" description = "Qty" value = "{inputParameters>/data/Qty}" />
+
+						<Button text = "Post method" press = "onPost" />
+						<Button text = "Get method" press = "onGet" />
+						<Button text = "Put method" press = "onPut" />
+						<Button text = "Delete method" press = "onDelete" />
+					</content>
 				</Page>
 			</pages>
 		</App>

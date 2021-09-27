@@ -67,7 +67,7 @@
           "bundleName": "odatatest.i18n.i18n"
         }
       },
-			"": {
+			"MainModel": {
 				"dataSource": "mainService",
 				"preload": true
 			}
