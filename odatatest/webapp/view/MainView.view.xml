@@ -9,13 +9,15 @@
 			<pages>
 				<Page id="page" title="{i18n>title}">
 					<content>
-						<Input liveChange=".onEtag" description = "Etag" value = "{inputParameters>/data/Etag}" />
-						<Input liveChange=".onFyear" description = "Fyear" value = "{inputParameters>/data/Fyear}" />
-						<Input liveChange=".onFperiod" description = "Fperiod" value = "{inputParameters>/data/Fperiod}" />
-						<Input liveChange=".onCurrencykey" description = "Currencykey" value = "{inputParameters>/data/Currencykey}" />
-						<Input liveChange=".onRatetype" description = "Ratetype" value = "{inputParameters>/data/Ratetype}" />
-						<Input liveChange=".onRate" description = "Rate" value = "{inputParameters>/data/Rate}" />
-						<Input liveChange=".onQty" description = "Qty" value = "{inputParameters>/data/Qty}" />
+						<Input liveChange=".onEtag" description = "Etag" value = "{inputParametersModel>/Etag}" />
+						<Input liveChange=".onFyear" description = "Fyear" value = "{inputParametersModel>/Fyear}" />
+						<Input liveChange=".onFperiod" description = "Fperiod" value = "{inputParametersModel>/Fperiod}" />
+						<Input liveChange=".onCurrencykey" description = "Currencykey" value = "{inputParametersModel>/Currencykey}" />
+						<Input liveChange=".onRatetype" description = "Ratetype" value = "{inputParametersModel>/Ratetype}" />
+						<Input liveChange=".onRate" description = "Rate" value = "{inputParametersModel>/Rate}" />
+						<Input liveChange=".onQty" description = "Qty" value = "{inputParametersModel>/Qty}" />
+
+						<Text text = "{messageModel>/text}" />
 
 						<Button text = "Post method" press = "onPost" />
 						<Button text = "Get method" press = "onGet" />

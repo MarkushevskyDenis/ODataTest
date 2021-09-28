@@ -8,9 +8,11 @@ sap.ui.define([
 		"use strict";
 
 		var mainModel;
+		var inputParametersModel;
+		var messageModel;
+
 		var body;
 		var mParameters;
-		var inputParameters;
 
 		return Controller.extend("odatatest.controller.MainView", {
 			onInit: function () {
@@ -19,9 +21,8 @@ sap.ui.define([
 				mainModel = this.getView().getModel("MainModel");
 				mainModel.setUseBatch(false);
 
-				inputParameters = new sap.ui.model.json.JSONModel(
-				{
-					data: {
+				inputParametersModel = new sap.ui.model.json.JSONModel(
+					{
 						Etag: "",
 						Fyear: 0,
 						Fperiod: 0,
@@ -29,68 +30,81 @@ sap.ui.define([
 						Ratetype: "",
 						Rate: 0,
 						Qty: 0
-					}
-				});
+					});
 
-				this.getView().setModel(inputParameters, "inputParameters");
+				messageModel = new sap.ui.model.json.JSONModel(
+					{
+						text: ""
+					}
+				);
 
 				mParameters = {
-					success: function (oData) {
-						inputParameters.oData.data = oData;
-						inputParameters.updateBindings();
+					success: function (oData, response) {
+						if (oData != undefined) {
+							inputParametersModel.oData = oData;
+							inputParametersModel.updateBindings();
+						} else {
+							console.log(response);
+						}
+						messageModel.oData.text = "Success";
+						messageModel.updateBindings();
 					},
 
 					error: function (oError) {
-						console.log(oError);
+						messageModel.oData.text = /"message":".+?"/.exec(oError.responseText);
+						messageModel.updateBindings();
 					}
 				};
-			},
-			
-			onPost: function(){
-				body = {
-					Fyear: Number(inputParameters.oData.data.Fyear),
-					Fperiod: Number(inputParameters.oData.data.Fperiod),
-					Currencykey: inputParameters.oData.data.Currencykey,
-					Ratetype: inputParameters.oData.data.Ratetype,
-					Rate: String(inputParameters.oData.data.Rate),
-					Qty: String(inputParameters.oData.data.Qty)
-				};
-				mainModel.create("/MainEntitySet", body, mParameters);
-			},
-			
-			onGet: function(){
-				mainModel.read("/MainEntitySet(Fyear=" + inputParameters.oData.data.Fyear + 
-											 ",Fperiod=" + inputParameters.oData.data.Fperiod + 
-											 ",Currencykey='" + inputParameters.oData.data.Currencykey + 
-											 "',Ratetype='" + inputParameters.oData.data.Ratetype + "')", mParameters);
-			},
-			
-			onPut: function(){
-				body = {
-					Fyear: Number(inputParameters.oData.data.Fyear),
-					Fperiod: Number(inputParameters.oData.data.Fperiod),
-					Currencykey: inputParameters.oData.data.Currencykey,
-					Ratetype: inputParameters.oData.data.Ratetype,
-					Rate: String(inputParameters.oData.data.Rate),
-					Qty: String(inputParameters.oData.data.Qty)
-				};
-				mParameters = {
-					eTag: 'W/"' + "'" + inputParameters.oData.data.eTag + "'" + '"'
-				};
-				mainModel.update("/MainEntitySet(Fyear=" + inputParameters.oData.data.Fyear + 
-											   ",Fperiod=" + inputParameters.oData.data.Fperiod + 
-											   ",Currencykey=" + inputParameters.oData.data.Currencykey + 
-											   ",Ratetype=" + inputParameters.oData.data.Ratetype + ")", body, mParameters);
+
+				this.getView().setModel(inputParametersModel, "inputParametersModel");
+				this.getView().setModel(messageModel, "messageModel");
 			},
 
-			onDelete: function(){
-				mParameters = {
-					eTag: 'W/"' + "'" + inputParameters.oData.data.eTag + "'" + '"'
+			onPost: function () {
+				body = {
+					Fyear: Number(inputParametersModel.oData.Fyear),
+					Fperiod: Number(inputParametersModel.oData.Fperiod),
+					Currencykey: inputParametersModel.oData.Currencykey,
+					Ratetype: inputParametersModel.oData.Ratetype,
+					Rate: String(inputParametersModel.oData.Rate),
+					Qty: String(inputParametersModel.oData.Qty)
 				};
-				mainModel.remove("/MainEntitySet(Fyear=" + inputParameters.oData.data.Fyear + 
-											   ",Fperiod=" + inputParameters.oData.data.Fperiod + 
-											   ",Currencykey=" + inputParameters.oData.data.Currencykey + 
-											   ",Ratetype=" + inputParameters.oData.data.Ratetype + ")", mParameters);
+				delete mParameters.eTag;
+				mainModel.create("/MainEntitySet", body, mParameters);
+			},
+
+			onGet: function () {
+				mainModel.read("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
+					",Fperiod=" + inputParametersModel.oData.Fperiod +
+					",Currencykey='" + inputParametersModel.oData.Currencykey +
+					"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", mParameters);
+			},
+
+			onPut: function () {
+				body = {
+					Fyear: Number(inputParametersModel.oData.Fyear),
+					Fperiod: Number(inputParametersModel.oData.Fperiod),
+					Currencykey: inputParametersModel.oData.Currencykey,
+					Ratetype: inputParametersModel.oData.Ratetype,
+					Rate: String(inputParametersModel.oData.Rate),
+					Qty: String(inputParametersModel.oData.Qty)
+				};
+
+				mParameters.eTag = 'W/"' + "'" + inputParametersModel.oData.Etag + "'" + '"';
+
+				mainModel.update("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
+					",Fperiod=" + inputParametersModel.oData.Fperiod +
+					",Currencykey='" + inputParametersModel.oData.Currencykey +
+					"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", body, mParameters);
+			},
+
+			onDelete: function () {
+				mParameters.eTag = 'W/"' + "'" + inputParametersModel.oData.Etag + "'" + '"';
+
+				mainModel.remove("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
+					",Fperiod=" + inputParametersModel.oData.Fperiod +
+					",Currencykey='" + inputParametersModel.oData.Currencykey +
+					"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", mParameters);
 			},
 		});
 	});
