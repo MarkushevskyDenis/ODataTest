@@ -23,6 +23,8 @@
 						<Button text = "Get method" press = "onGet" />
 						<Button text = "Put method" press = "onPut" />
 						<Button text = "Delete method" press = "onDelete" />
+
+						<Button text = "Batch request" press = "onBatch" />
 					</content>
 				</Page>
 			</pages>

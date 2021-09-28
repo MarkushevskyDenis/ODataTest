@@ -19,7 +19,6 @@ sap.ui.define([
 				console.clear();
 
 				mainModel = this.getView().getModel("MainModel");
-				mainModel.setUseBatch(false);
 
 				inputParametersModel = new sap.ui.model.json.JSONModel(
 					{
@@ -61,19 +60,25 @@ sap.ui.define([
 			},
 
 			onPost: function () {
+				mainModel.setUseBatch(false);
+
 				body = {
-					Fyear: Number(inputParametersModel.oData.Fyear),
+					Fyear: Number(inputParametersModel.getProperty("/Fyear")), //можно через getProperty
 					Fperiod: Number(inputParametersModel.oData.Fperiod),
 					Currencykey: inputParametersModel.oData.Currencykey,
 					Ratetype: inputParametersModel.oData.Ratetype,
 					Rate: String(inputParametersModel.oData.Rate),
 					Qty: String(inputParametersModel.oData.Qty)
 				};
+
 				delete mParameters.eTag;
+
 				mainModel.create("/MainEntitySet", body, mParameters);
 			},
 
 			onGet: function () {
+				mainModel.setUseBatch(false);
+
 				mainModel.read("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
 					",Fperiod=" + inputParametersModel.oData.Fperiod +
 					",Currencykey='" + inputParametersModel.oData.Currencykey +
@@ -81,6 +86,8 @@ sap.ui.define([
 			},
 
 			onPut: function () {
+				mainModel.setUseBatch(false);
+
 				body = {
 					Fyear: Number(inputParametersModel.oData.Fyear),
 					Fperiod: Number(inputParametersModel.oData.Fperiod),
@@ -99,6 +106,8 @@ sap.ui.define([
 			},
 
 			onDelete: function () {
+				mainModel.setUseBatch(false);
+
 				mParameters.eTag = 'W/"' + "'" + inputParametersModel.oData.Etag + "'" + '"';
 
 				mainModel.remove("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
@@ -106,5 +115,35 @@ sap.ui.define([
 					",Currencykey='" + inputParametersModel.oData.Currencykey +
 					"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", mParameters);
 			},
+
+			onBatch: function () {
+				var mParameters = { groupId: "foo", success: function (odata, resp) { console.log(resp); }, error: function (odata, resp) { console.log(resp); } };
+
+				body = {
+					Fyear: Number(inputParametersModel.oData.Fyear),
+					Fperiod: Number(inputParametersModel.oData.Fperiod),
+					Currencykey: inputParametersModel.oData.Currencykey,
+					Ratetype: inputParametersModel.oData.Ratetype,
+					Rate: String(inputParametersModel.oData.Rate),
+					Qty: String(inputParametersModel.oData.Qty)
+				};
+				//1) устанавливаем режим "batch"
+				mainModel.setUseBatch(true);
+				//2) устанавливаем группы, которые необходимо отложить
+				//(должны быть явно вызваны методом submitChanges, если каких-то групп здесть нет, то вызываются не явно)
+				mainModel.setDeferredGroups(["foo"]);
+				//3) вызываем запросы
+				for (var m = 0; m < 3; m++) {
+					body.Fyear += m;
+					mainModel.create("/MainEntitySet", body, mParameters);
+				}
+				mainModel.read("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
+				",Fperiod=" + inputParametersModel.oData.Fperiod +
+				",Currencykey='" + inputParametersModel.oData.Currencykey +
+				"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", mParameters);
+				//4) подтверждаем отправку
+				mainModel.submitChanges(mParameters);
+
+			}
 		});
 	});
