@@ -18,12 +18,12 @@
 						<Input liveChange=".onQty" description = "Qty" value = "{inputParametersModel>/Qty}" />
 
 						<Text text = "{messageModel>/text}" />
-
-						<Button text = "Post method" press = "onPost" />
-						<Button text = "Get method" press = "onGet" />
-						<Button text = "Put method" press = "onPut" />
-						<Button text = "Delete method" press = "onDelete" />
-
+						<HBox>
+							<Button text = "Post method" press = "onPost" />
+							<Button text = "Get method" press = "onGet" />
+							<Button text = "Put method" press = "onPut" />
+							<Button text = "Delete method" press = "onDelete" />
+						</HBox>
 						<Button text = "Batch request" press = "onBatch" />
 					</content>
 				</Page>

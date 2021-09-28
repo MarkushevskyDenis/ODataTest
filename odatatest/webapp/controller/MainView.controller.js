@@ -117,7 +117,7 @@ sap.ui.define([
 			},
 
 			onBatch: function () {
-				var mParameters = { groupId: "foo", success: function (odata, resp) { console.log(resp); }, error: function (odata, resp) { console.log(resp); } };
+				var mParameters1 = { groupId: "foo", success: function (odata, resp) { console.log(resp); }, error: function (odata, resp) { console.log(resp); } };
 
 				body = {
 					Fyear: Number(inputParametersModel.oData.Fyear),
@@ -133,17 +133,27 @@ sap.ui.define([
 				//(должны быть явно вызваны методом submitChanges, если каких-то групп здесть нет, то вызываются не явно)
 				mainModel.setDeferredGroups(["foo"]);
 				//3) вызываем запросы
-				for (var m = 0; m < 3; m++) {
-					body.Fyear += m;
-					mainModel.create("/MainEntitySet", body, mParameters);
-				}
+				//a) POST
+				mainModel.create("/MainEntitySet", body, mParameters1);
+				//b) GET
 				mainModel.read("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
 				",Fperiod=" + inputParametersModel.oData.Fperiod +
 				",Currencykey='" + inputParametersModel.oData.Currencykey +
-				"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", mParameters);
+				"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", mParameters1);
+				//c) PUT
+				mParameters1.eTag = 'W/"' + "'" + inputParametersModel.oData.Etag + "'" + '"';
+				mainModel.update("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
+				",Fperiod=" + inputParametersModel.oData.Fperiod +
+				",Currencykey='" + inputParametersModel.oData.Currencykey +
+				"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", body, mParameters1);
+				//d) DELETE
+				mParameters1.eTag = 'W/"' + "'" + inputParametersModel.oData.Etag + "'" + '"';
+				mainModel.remove("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
+					",Fperiod=" + inputParametersModel.oData.Fperiod +
+					",Currencykey='" + inputParametersModel.oData.Currencykey +
+					"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", mParameters1);
 				//4) подтверждаем отправку
-				mainModel.submitChanges(mParameters);
-
+				mainModel.submitChanges(mParameters1);
 			}
 		});
 	});
