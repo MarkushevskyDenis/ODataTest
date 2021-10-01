@@ -12,14 +12,12 @@ sap.ui.define([
 		var messageModel;
 
 		var body;
-		var mParameters;
 
 		return Controller.extend("odatatest.controller.MainView", {
 			onInit: function () {
 				console.clear();
-
 				mainModel = this.getView().getModel("MainModel");
-
+				mainModel.setUseBatch(false);
 				inputParametersModel = new sap.ui.model.json.JSONModel(
 					{
 						Etag: "",
@@ -37,31 +35,11 @@ sap.ui.define([
 					}
 				);
 
-				mParameters = {
-					success: function (oData, response) {
-						if (oData != undefined) {
-							inputParametersModel.oData = oData;
-							inputParametersModel.updateBindings();
-						} else {
-							console.log(response);
-						}
-						messageModel.oData.text = "Success";
-						messageModel.updateBindings();
-					},
-
-					error: function (oError) {
-						messageModel.oData.text = /"message":".+?"/.exec(oError.responseText);
-						messageModel.updateBindings();
-					}
-				};
-
 				this.getView().setModel(inputParametersModel, "inputParametersModel");
 				this.getView().setModel(messageModel, "messageModel");
 			},
 
 			onPost: function () {
-				mainModel.setUseBatch(false);
-
 				body = {
 					Fyear: Number(inputParametersModel.getProperty("/Fyear")), //можно через getProperty
 					Fperiod: Number(inputParametersModel.oData.Fperiod),
@@ -71,23 +49,56 @@ sap.ui.define([
 					Qty: String(inputParametersModel.oData.Qty)
 				};
 
-				delete mParameters.eTag;
+				mainModel.create("/MainEntitySet", body,
+					{
+						groupId: "foo",
+						changeSetId: "1",
 
-				mainModel.create("/MainEntitySet", body, mParameters);
+						success: function (oData) {
+							inputParametersModel.oData = oData;
+							inputParametersModel.updateBindings();
+
+							messageModel.oData.text = "Success";
+							messageModel.updateBindings();
+						},
+
+						error: function (oError) {
+							messageModel.oData.text = /"message":".+?"/.exec(oError.responseText);
+							messageModel.updateBindings();
+						}
+					});
+
+				messageModel.oData.text = "Wait please";
+				messageModel.updateBindings();
 			},
 
 			onGet: function () {
-				mainModel.setUseBatch(false);
-
 				mainModel.read("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
 					",Fperiod=" + inputParametersModel.oData.Fperiod +
 					",Currencykey='" + inputParametersModel.oData.Currencykey +
-					"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", mParameters);
+					"',Ratetype='" + inputParametersModel.oData.Ratetype + "')",
+					{
+						groupId: "foo",
+
+						success: function (oData) {
+							inputParametersModel.oData = oData;
+							inputParametersModel.updateBindings();
+
+							messageModel.oData.text = "Success";
+							messageModel.updateBindings();
+						},
+
+						error: function (oError) {
+							messageModel.oData.text = /"message":".+?"/.exec(oError.responseText);
+							messageModel.updateBindings();
+						}
+					});
+
+				messageModel.oData.text = "Wait please";
+				messageModel.updateBindings();
 			},
 
 			onPut: function () {
-				mainModel.setUseBatch(false);
-
 				body = {
 					Fyear: Number(inputParametersModel.oData.Fyear),
 					Fperiod: Number(inputParametersModel.oData.Fperiod),
@@ -97,63 +108,96 @@ sap.ui.define([
 					Qty: String(inputParametersModel.oData.Qty)
 				};
 
-				mParameters.eTag = 'W/"' + "'" + inputParametersModel.oData.Etag + "'" + '"';
-
 				mainModel.update("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
 					",Fperiod=" + inputParametersModel.oData.Fperiod +
 					",Currencykey='" + inputParametersModel.oData.Currencykey +
-					"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", body, mParameters);
+					"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", body,
+					{
+						groupId: "foo",
+						eTag: 'W/"' + "'" + inputParametersModel.oData.Etag + "'" + '"',
+						changeSetId: "1",
+
+						success: function (oData, response) {
+							console.log(response);
+
+							messageModel.oData.text = "Success";
+							messageModel.updateBindings();
+						},
+
+						error: function (oError) {
+							messageModel.oData.text = /"message":".+?"/.exec(oError.responseText);
+							messageModel.updateBindings();
+						}
+					});
+
+				messageModel.oData.text = "Wait please";
+				messageModel.updateBindings();
 			},
 
 			onDelete: function () {
-				mainModel.setUseBatch(false);
-
-				mParameters.eTag = 'W/"' + "'" + inputParametersModel.oData.Etag + "'" + '"';
-
 				mainModel.remove("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
 					",Fperiod=" + inputParametersModel.oData.Fperiod +
 					",Currencykey='" + inputParametersModel.oData.Currencykey +
-					"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", mParameters);
+					"',Ratetype='" + inputParametersModel.oData.Ratetype + "')",
+					{
+						groupId: "foo",
+						eTag: 'W/"' + "'" + inputParametersModel.oData.Etag + "'" + '"',
+						changeSetId: "1",
+
+						success: function (oData, response) {
+							console.log(response);
+
+							messageModel.oData.text = "Success";
+							messageModel.updateBindings();
+						},
+
+						error: function (oError) {
+							messageModel.oData.text = /"message":".+?"/.exec(oError.responseText);
+							messageModel.updateBindings();
+						}
+					});
+
+				messageModel.oData.text = "Wait please";
+				messageModel.updateBindings();
 			},
 
 			onBatch: function () {
-				var mParameters1 = { groupId: "foo", success: function (odata, resp) { console.log(resp); }, error: function (odata, resp) { console.log(resp); } };
-
-				body = {
-					Fyear: Number(inputParametersModel.oData.Fyear),
-					Fperiod: Number(inputParametersModel.oData.Fperiod),
-					Currencykey: inputParametersModel.oData.Currencykey,
-					Ratetype: inputParametersModel.oData.Ratetype,
-					Rate: String(inputParametersModel.oData.Rate),
-					Qty: String(inputParametersModel.oData.Qty)
-				};
 				//1) устанавливаем режим "batch"
 				mainModel.setUseBatch(true);
 				//2) устанавливаем группы, которые необходимо отложить
-				//(должны быть явно вызваны методом submitChanges, если каких-то групп здесть нет, то вызываются не явно)
+				//(должны быть явно вызваны методом submitChanges, если каких-то групп здесть нет, то вызываются неявно)
 				mainModel.setDeferredGroups(["foo"]);
 				//3) вызываем запросы
-				//a) POST
-				mainModel.create("/MainEntitySet", body, mParameters1);
-				//b) GET
-				mainModel.read("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
-				",Fperiod=" + inputParametersModel.oData.Fperiod +
-				",Currencykey='" + inputParametersModel.oData.Currencykey +
-				"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", mParameters1);
-				//c) PUT
-				mParameters1.eTag = 'W/"' + "'" + inputParametersModel.oData.Etag + "'" + '"';
-				mainModel.update("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
-				",Fperiod=" + inputParametersModel.oData.Fperiod +
-				",Currencykey='" + inputParametersModel.oData.Currencykey +
-				"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", body, mParameters1);
-				//d) DELETE
-				mParameters1.eTag = 'W/"' + "'" + inputParametersModel.oData.Etag + "'" + '"';
-				mainModel.remove("/MainEntitySet(Fyear=" + inputParametersModel.oData.Fyear +
-					",Fperiod=" + inputParametersModel.oData.Fperiod +
-					",Currencykey='" + inputParametersModel.oData.Currencykey +
-					"',Ratetype='" + inputParametersModel.oData.Ratetype + "')", mParameters1);
+			},
+
+			onSubmit: function () {
 				//4) подтверждаем отправку
-				mainModel.submitChanges(mParameters1);
+				mainModel.submitChanges(
+					{
+						groupId: "foo",
+
+						success: function (odata, response) {
+							mainModel.setUseBatch(false);
+							mainModel.setDeferredGroups([]);
+							
+							console.log(odata);
+							console.log(response);
+						},
+						error: function (error) {
+							mainModel.setUseBatch(false);
+							mainModel.setDeferredGroups([]);
+
+							console.log(error);
+						}
+					});
+				//5) заключительные операции
+				messageModel.oData.text = "Wait please";
+				messageModel.updateBindings();
+			},
+
+			onSelectionChange: function(oEvent){
+				inputParametersModel.oData = mainModel.getProperty(oEvent.getParameters().listItem.oBindingContexts.MainModel.sPath);
+				inputParametersModel.updateBindings();
 			}
 		});
 	});
