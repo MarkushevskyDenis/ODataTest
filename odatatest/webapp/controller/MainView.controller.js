@@ -178,7 +178,7 @@ sap.ui.define([
 
 			onSubmit: function () {
 				var batchElement;
-				
+
 				batchElement = this.getView().byId("Batch");
 				
 				batchElement.removeStyleClass("green");
@@ -206,6 +206,19 @@ sap.ui.define([
 				//5) заключительные операции
 				messageModel.oData.text = "Wait please";
 				messageModel.updateBindings();
+			},
+
+			onFunctionImport: function(){
+				mainModel.callFunction("/do_something",
+				{
+					urlParameters: {
+						something: "asfdsf"
+					},
+
+					success: function(odata, response){
+						console.log(odata);
+					}
+				});
 			},
 
 			onSelectionChange: function(oEvent){
