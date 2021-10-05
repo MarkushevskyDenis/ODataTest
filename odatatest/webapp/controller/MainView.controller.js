@@ -118,8 +118,9 @@ sap.ui.define([
 						changeSetId: "1",
 
 						success: function (oData, response) {
-							console.log(response);
-
+							inputParametersModel.oData.Etag = /[0-9a-zA-Z][0-9a-zA-Z]+/.exec(response.headers.etag)[0];
+							inputParametersModel.updateBindings();
+							
 							messageModel.oData.text = "Success";
 							messageModel.updateBindings();
 						},
@@ -145,8 +146,6 @@ sap.ui.define([
 						changeSetId: "1",
 
 						success: function (oData, response) {
-							console.log(response);
-
 							messageModel.oData.text = "Success";
 							messageModel.updateBindings();
 						},
