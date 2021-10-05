@@ -1,43 +1,44 @@
 <mvc:View
-    controllerName="odatatest.controller.MainView"
-    xmlns:mvc="sap.ui.core.mvc"
-    displayBlock="true"
-    xmlns="sap.m"
+    controllerName = "odatatest.controller.MainView"
+    xmlns:mvc = "sap.ui.core.mvc"
+    displayBlock = "true"
+    xmlns = "sap.m"
 >
-	<Shell id="shell">
-		<App id="app">
+	<Shell id = "shell">
+		<App id = "app">
 			<pages>
-				<Page id="page" title="{i18n>title}">
+				<Page id = "page" title = "{i18n>title}">
 					<content>
+					<Text id = "Batch" text = "Batch" class = "red"/>
 						<VBox>
-							<Input liveChange=".onEtag" description = "Etag" value = "{inputParametersModel>/Etag}" />
-							<Input liveChange=".onFyear" description = "Fyear" value = "{inputParametersModel>/Fyear}" />
-							<Input liveChange=".onFperiod" description = "Fperiod" value = "{inputParametersModel>/Fperiod}" />
-							<Input liveChange=".onCurrencykey" description = "Currencykey" value = "{inputParametersModel>/Currencykey}" />
-							<Input liveChange=".onRatetype" description = "Ratetype" value = "{inputParametersModel>/Ratetype}" />
-							<Input liveChange=".onRate" description = "Rate" value = "{inputParametersModel>/Rate}" />
-							<Input liveChange=".onQty" description = "Qty" value = "{inputParametersModel>/Qty}" />
+							<Input liveChange = ".onEtag" description = "Etag" value = "{inputParametersModel>/Etag}"/>
+							<Input liveChange = ".onFyear" description = "Fyear" value = "{inputParametersModel>/Fyear}"/>
+							<Input liveChange = ".onFperiod" description = "Fperiod" value = "{inputParametersModel>/Fperiod}"/>
+							<Input liveChange = ".onCurrencykey" description = "Currencykey" value = "{inputParametersModel>/Currencykey}"/>
+							<Input liveChange = ".onRatetype" description = "Ratetype" value = "{inputParametersModel>/Ratetype}"/>
+							<Input liveChange = ".onRate" description = "Rate" value = "{inputParametersModel>/Rate}"/>
+							<Input liveChange = ".onQty" description = "Qty" value = "{inputParametersModel>/Qty}"/>
 
 							<Text text = "{messageModel>/text}" />
 							<HBox>
-								<Button text = "Post method" press = "onPost" />
-								<Button text = "Get method" press = "onGet" />
-								<Button text = "Put method" press = "onPut" />
-								<Button text = "Delete method" press = "onDelete" />
+								<Button text = "Post method" press = "onPost"/>
+								<Button text = "Get method" press = "onGet"/>
+								<Button text = "Put method" press = "onPut"/>
+								<Button text = "Delete method" press = "onDelete"/>
 							</HBox>
 							
 							<HBox>
-								<Button text = "Batch request" press = "onBatch" />
-								<Button text = "Submit" press = "onSubmit" />
+								<Button text = "Batch request" press = "onBatch"/>
+								<Button text = "Submit" press = "onSubmit"/>
 							</HBox>
 							<List headerText = "Main entity set" items = "{path: 'MainModel>/MainEntitySet'}" mode = "SingleSelectMaster" selectionChange = "onSelectionChange">
 								<CustomListItem>
 									<HBox>
-										<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" >
-											<Text text = "Fyear: {MainModel>Fyear}" />
-											<Text text = "Fperiod: {MainModel>Fperiod}" />
-											<Text text = "Currencykey: {MainModel>Currencykey}" />
-											<Text text = "Ratetype: {MainModel>Ratetype}" />
+										<VBox class = "sapUiSmallMarginBegin sapUiSmallMarginTopBottom">
+											<Text text = "Fyear: {MainModel>Fyear}"/>
+											<Text text = "Fperiod: {MainModel>Fperiod}"/>
+											<Text text = "Currencykey: {MainModel>Currencykey}"/>
+											<Text text = "Ratetype: {MainModel>Ratetype}"/>
 										</VBox>
 									</HBox>
 								</CustomListItem>

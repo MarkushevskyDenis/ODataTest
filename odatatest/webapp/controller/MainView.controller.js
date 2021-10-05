@@ -161,6 +161,13 @@ sap.ui.define([
 			},
 
 			onBatch: function () {
+				var batchElement;
+				
+				batchElement = this.getView().byId("Batch");
+				
+				batchElement.removeStyleClass("red");
+				batchElement.addStyleClass("green");
+
 				//1) устанавливаем режим "batch"
 				mainModel.setUseBatch(true);
 				//2) устанавливаем группы, которые необходимо отложить
@@ -170,6 +177,13 @@ sap.ui.define([
 			},
 
 			onSubmit: function () {
+				var batchElement;
+				
+				batchElement = this.getView().byId("Batch");
+				
+				batchElement.removeStyleClass("green");
+				batchElement.addStyleClass("red");
+
 				//4) подтверждаем отправку
 				mainModel.submitChanges(
 					{
